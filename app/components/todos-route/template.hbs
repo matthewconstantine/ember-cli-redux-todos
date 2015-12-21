@@ -23,9 +23,9 @@
     </span>
 
     <ul class='filters'>
-      <li> {{link-to 'All' 'index'       (query-params state='all')       activeClass='selected'}} </li>
-      <li> {{link-to 'Active' 'index'    (query-params state='active')    activeClass='selected'}} </li>
-      <li> {{link-to 'Completed' 'index' (query-params state='completed') activeClass='selected'}} </li>
+      <li> {{link-to 'All' 'index'       (query-params filter='all')       activeClass='selected'}} </li>
+      <li> {{link-to 'Active' 'index'    (query-params filter='active')    activeClass='selected'}} </li>
+      <li> {{link-to 'Completed' 'index' (query-params filter='completed') activeClass='selected'}} </li>
     </ul>
 
     {{#if completed}}
