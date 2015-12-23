@@ -4,6 +4,6 @@
                            insert-newline=(action 'save' todo)}}
 {{else}}
   <input type='checkbox' checked={{todo.isCompleted}} class='toggle' onchange={{action 'toggleCompleteTodo' todo}}>
-  <label {{action 'editTodo' on='doubleClick'}}>{{todo.title}}</label>
+  <label {{action 'editTodo' todo on='doubleClick'}}>{{todo.title}}</label>
   <button {{action 'removeTodo' todo}} class='destroy'></button>
 {{/if}}

@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import EmberRedux from '../../mixins/ember-redux';
 
 const {
   Component,
@@ -7,8 +8,10 @@ const {
   inject: { service }
 } = Ember;
 
-export default Component.extend({
+export default Component.extend(EmberRedux, {
   store: service(),
+  reduxStore: Ember.inject.service(),
+  state: computed.alias('reduxStore.state'),
 
   filtered: computed('todos.@each.isCompleted', 'filter', function() {
     switch(this.get('filter')) {
@@ -45,26 +48,25 @@ export default Component.extend({
       });
 
       // Clear the "New Todo" text field
+      // TODO: store this in state
       this.set('newTitle', '');
 
       // Save the new model
       todo.save();
+
+      // Add it to redux
+      this.dispatch({
+        type: 'ADD_TODO',
+        todo
+      });
     },
 
     completeAll() {
-      let todos = this.get('todos');
-      let allAreDone = this.get('allAreDone');
-
-      todos.setEach('isCompleted', !allAreDone);
-      todos.invoke('save');
+      this.dispatch({ type: 'COMPLETE_ALL' });
     },
 
     clearCompleted() {
-      let completed = this.get('completed');
-
-      completed
-        .toArray() // clone the array, so it is not bound while we iterate over and delete.
-        .invoke('destroyRecord');
+      this.dispatch({ type: 'CLEAR_COMPLETED'});
     }
   }
 });

@@ -15,14 +15,9 @@ export default Ember.Route.extend(EmberRedux, {
       return {type: 'SET_FILTER', filter};
     },
     requestTodos() {
-      return (dispatch) => {
-        dispatch({type: 'REQUEST_TODOS'});
-        this.store.findAll('todo').then((todos) => {
-          dispatch({
-            type: 'RECEIVE_TODOS',
-            todos
-          });
-        });
+      return {
+        type: 'FETCH_TODOS',
+        todos: this.store.findAll('todo')
       };
     }
   },
@@ -30,7 +25,9 @@ export default Ember.Route.extend(EmberRedux, {
   model(params) {
     this.dispatchAction('setFilter', params.filter);
     this.dispatchAction('requestTodos');
-    return this.get('state.todos');
+    return this.get('state.todo.todos').then(()=> {
+      return null; // unnecessary, but ensures the UI only deals with redux state
+    });
   }
 
 });
