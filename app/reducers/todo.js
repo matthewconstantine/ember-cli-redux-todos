@@ -3,7 +3,9 @@ import Ember from 'ember';
 const initialState = {
   todos: Ember.A(),
   filter: 'all',
-  editingTodo: null
+  editingTodo: null,
+  newTitle: "Remove this from initialState :)",
+  promise: Ember.RSVP.resolve([])
 };
 
 export default function todo(state = initialState, action = null) {
@@ -13,13 +15,30 @@ export default function todo(state = initialState, action = null) {
         filter: action.filter
       });
 
-    case 'FETCH_TODOS':
+    case 'REQUEST_TODOS':
       return Object.assign({}, state, {
-        todos: action.todos
+        promise: action.promise
       });
 
-    case 'ADD_TODO':
-      return state; // TODO: add it for real
+    case 'RECEIVE_TODOS':
+      return Object.assign({}, state, {
+        todos: action.todos.toArray()
+      });
+
+    case 'CREATE_TODO':
+      if (action.title && !action.title.trim()) {
+        return Object.assign({}, state, {newTitle: ""});
+      }
+
+      let newTodo = action.store.createRecord('todo', {
+        title: action.title.trim()
+      });
+      newTodo.save(); // side effect
+
+      return Object.assign({}, state, {
+        newTitle: "",
+        todos: state.todos.pushObject(newTodo)
+      });
 
     case 'EDIT_TODO':
       return Object.assign({}, state, {editingTodo: action.todo});
