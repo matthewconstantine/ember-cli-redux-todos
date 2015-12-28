@@ -1,33 +1,31 @@
 import Ember from 'ember';
 
-const initialState = {
+const initialState = Ember.Object.create({
   todos: Ember.A(),
   filter: 'all',
   editingTodo: null,
   newTitle: "Remove this from initialState :)",
   promise: Ember.RSVP.resolve([])
-};
+});
 
 export default function todo(state = initialState, action = null) {
   switch (action.type) {
     case 'SET_FILTER':
-      return Object.assign({}, state, {
-        filter: action.filter
-      });
+      state.setProperties({filter: action.filter});
+      return state;
 
     case 'REQUEST_TODOS':
-      return Object.assign({}, state, {
-        promise: action.promise
-      });
+      state.setProperties({promise: action.promise});
+      return state;
 
     case 'RECEIVE_TODOS':
-      return Object.assign({}, state, {
-        todos: action.todos.toArray()
-      });
+      state.setProperties({todos: action.todos.toArray()});
+      return state;
 
     case 'CREATE_TODO':
       if (action.title && !action.title.trim()) {
-        return Object.assign({}, state, {newTitle: ""});
+        state.setProperties({newTitle: ""});
+        return state;
       }
 
       let newTodo = action.store.createRecord('todo', {
@@ -35,24 +33,25 @@ export default function todo(state = initialState, action = null) {
       });
       newTodo.save(); // side effect
 
-      return Object.assign({}, state, {
-        newTitle: "",
-        todos: state.todos.pushObject(newTodo)
-      });
+      state.set('newTitle', '');
+      state.todos.pushObject(newTodo);
+      return state;
 
     case 'EDIT_TODO':
-      return Object.assign({}, state, {editingTodo: action.todo});
+      state.setProperties({editingTodo: action.todo});
+      return state;
 
     case 'UPDATE_TODO':
-      // action.todo.set('title', action.title); // side effect
-      // action.todo.save(); // side effect
-      // debugger
-      return Object.assign({}, state, {editingTodo: null});
+      action.todo.set('title', action.title); // side effect
+      action.todo.save(); // side effect
+      state.setProperties({editingTodo: null});
+      return state;
 
     case 'REMOVE_TODO':
       action.todo.destroyRecord(); // side effect
       const remaining = state.todos.filter(todo => todo !== action.todo);
-      return Object.assign({}, state, {todos: remaining});
+      state.setProperties({todos: remaining});
+      return state;
 
     case 'TOGGLE_COMPLETED':
       action.todo.toggleProperty('isCompleted'); // side effect
@@ -67,7 +66,8 @@ export default function todo(state = initialState, action = null) {
         todo.set('isCompleted', !allAreDone);  // side effect
         return todo;
       });
-      return Object.assign({}, state, {todos});
+      state.set({todos});
+      return state;
 
     case 'CLEAR_COMPLETED':
       const uncompleted = state.todos.reduce((acc, todo) => {
@@ -78,7 +78,8 @@ export default function todo(state = initialState, action = null) {
         }
         return acc;
       }, []);
-      return Object.assign({}, state, {todos: uncompleted});
+      state.set('todos', uncompleted);
+      return state;
 
   default:
     return state;
