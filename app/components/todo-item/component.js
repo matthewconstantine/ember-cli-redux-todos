@@ -18,14 +18,14 @@ export default Ember.Component.extend(EmberRedux, {
     editTodo(todo) {
       this.dispatch({
         type: 'EDIT_TODO',
-        todo,
+        id: todo.id,
       });
     },
 
     save(todo, title) {
       this.dispatch({
         type: 'UPDATE_TODO',
-        todo,
+        id: todo.id,
         title
       });
     },
@@ -33,14 +33,14 @@ export default Ember.Component.extend(EmberRedux, {
     removeTodo(todo) {
       this.dispatch({
         type: 'REMOVE_TODO',
-        todo
+        id: todo.id
       });
     },
 
     toggleCompleteTodo(todo) {
       this.dispatch({
         type: 'TOGGLE_COMPLETED',
-        todo
+        id: todo.id
       });
     }
   }

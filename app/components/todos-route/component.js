@@ -10,7 +10,7 @@ const {
 
 export default Component.extend(EmberRedux, {
   store: service(),
-  reduxStore: Ember.inject.service(),
+  reduxStore: service(),
   state: computed.alias('reduxStore.state'),
 
   newTitle: computed.alias('state.todo.newTitle'),

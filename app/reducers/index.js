@@ -3,7 +3,11 @@ const { combineReducers } = redux;
 
 import todo from './todo';
 
-export default combineReducers({
+function bindEmberStore(emberStore, fn) {
+  return fn.bind(null, emberStore);
+}
+
+export default emberStore => combineReducers({
   // Add additional reducers here in order of data dependency.
-  todo
+  todo: bindEmberStore(emberStore, todo)
 });

@@ -4,11 +4,11 @@ const initialState = Ember.Object.create({
   todos: Ember.A(),
   filter: 'all',
   editingTodo: null,
-  newTitle: "Remove this from initialState :)",
+  newTitle: "",
   promise: Ember.RSVP.resolve([])
 });
 
-export default function todo(state = initialState, action = null) {
+export default function todo(emberStore, state = initialState, action = null) {
   switch (action.type) {
     case 'SET_FILTER':
       state.setProperties({filter: action.filter});
@@ -28,9 +28,9 @@ export default function todo(state = initialState, action = null) {
         return state;
       }
 
-      let newTodo = action.store.createRecord('todo', {
+      let newTodo = emberStore.createRecord('todo', {
         title: action.title.trim()
-      });
+      }); // side effect
       newTodo.save(); // side effect
 
       state.set('newTitle', '');
@@ -38,24 +38,28 @@ export default function todo(state = initialState, action = null) {
       return state;
 
     case 'EDIT_TODO':
-      state.setProperties({editingTodo: action.todo});
+      let editingTodo = emberStore.peekRecord('todo', action.id);
+      state.setProperties({editingTodo});
       return state;
 
     case 'UPDATE_TODO':
-      action.todo.set('title', action.title); // side effect
-      action.todo.save(); // side effect
+      let updatedTodo = emberStore.peekRecord('todo', action.id);
+      updatedTodo.set('title', action.title); // side effect
+      updatedTodo.save(); // side effect
       state.setProperties({editingTodo: null});
       return state;
 
     case 'REMOVE_TODO':
-      action.todo.destroyRecord(); // side effect
-      const remaining = state.todos.filter(todo => todo !== action.todo);
+      let removedTodo = emberStore.peekRecord('todo', action.id);
+      removedTodo.destroyRecord(); // side effect
+      const remaining = state.todos.filter(todo => todo !== removedTodo);
       state.setProperties({todos: remaining});
       return state;
 
     case 'TOGGLE_COMPLETED':
-      action.todo.toggleProperty('isCompleted'); // side effect
-      action.todo.save(); // side effect
+      let completedTodo = emberStore.peekRecord('todo', action.id);
+      completedTodo.toggleProperty('isCompleted'); // side effect
+      completedTodo.save(); // side effect
       return state;
 
     case 'COMPLETE_ALL':
