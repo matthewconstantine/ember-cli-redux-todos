@@ -1,6 +1,6 @@
-# Todos
+# Ember CLI Redux Todos
 
-This is an example of the todo-mvc app, it aims to trail ember-cli and ember.js's latest stable conventions. To view a project more on the bleeding edge, feel to pop over and check out [ember-jobs](https://github.com/stefanpenner/ember-jobs)
+This is an example todo-mvc app that provides a demonstration of [Ember CLI Redux](https://github.com/AltSchool/ember-cli-redux).
 
 ## Prerequisites
 
@@ -14,7 +14,7 @@ You will need the following things properly installed on your computer.
 
 ## Installation
 
-* `git clone <repository-url>` this repository
+* `git clone https://github.com/matthewconstantine/ember-cli-redux-todos` 
 * change into the new directory
 * `npm install`
 * `bower install`
@@ -24,26 +24,19 @@ You will need the following things properly installed on your computer.
 * `ember server`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 
-### Code Generators
-
-Make use of the many generators for code, try `ember help generate` for more details
-
 ### Running Tests
 
+* `ember server` then visit [http://localhost:4200](http://localhost:4200/tests) or...
 * `ember test`
 * `ember test --server`
 
 ### Building
 
 * `ember build` (development)
-* `ember build --environment production` (production)
-
-### Deploying
-
-Specify what it takes to deploy your app.
 
 ## Further Reading / Useful Links
 
+* [Ember CLI Redux](https://github.com/AltSchool/ember-cli-redux)
 * [ember.js](http://emberjs.com/)
 * [ember-cli](http://www.ember-cli.com/)
 * Development Browser Extensions
