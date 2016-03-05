@@ -1,11 +1,8 @@
 // routes/todos.js
 import Ember from 'ember';
-import EmberRedux from '../mixins/ember-redux';
+import EmberRedux from 'ember-cli-redux/mixins/ember-redux';
 
 export default Ember.Route.extend(EmberRedux, {
-  reduxStore: Ember.inject.service(),
-  state: Ember.computed.alias('reduxStore.state'),
-
   queryParams: {
     filter: { refreshModel: true }
   },
