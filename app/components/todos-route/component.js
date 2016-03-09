@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import EmberRedux from '../../mixins/ember-redux';
+import connect from 'ember-cli-redux/lib/connect';
 
 const {
   Component,
@@ -8,12 +8,8 @@ const {
   inject: { service }
 } = Ember;
 
-export default Component.extend(EmberRedux, {
+const TodosRouteComponent = Component.extend({
   store: service(),
-  reduxStore: Ember.inject.service(),
-  state: computed.alias('reduxStore.state'),
-
-  newTitle: computed.alias('state.todo.newTitle'),
 
   filtered: computed('todos.@each.isCompleted', 'filter', function() {
     switch(this.get('filter')) {
@@ -33,24 +29,25 @@ export default Component.extend(EmberRedux, {
   inflection: computed('active.length', function() {
     let active = this.get('active.length');
     return active === 1 ? 'item' : 'items';
-  }).readOnly(),
-
-  actions: {
-    createTodo(title) {
-      let store = this.get('store');
-      this.dispatch({
-        type: 'CREATE_TODO',
-        store,
-        title
-      });
-    },
-
-    completeAll() {
-      this.dispatch({ type: 'COMPLETE_ALL' });
-    },
-
-    clearCompleted() {
-      this.dispatch({ type: 'CLEAR_COMPLETED'});
-    }
-  }
+  }).readOnly()
 });
+
+const stateMap = () => {
+  return {
+    newTitle: 'todo.newTitle'
+  };
+};
+
+const actionMap = (dispatch, component) => {
+  return {
+    completeAll: 'COMPLETE_ALL',
+    clearCompleted: 'CLEAR_COMPLETED',
+    createTodo: (title) => dispatch({
+      type: 'CREATE_TODO',
+      store: component.get('store'),
+      title
+    })
+  };
+};
+
+export default connect(stateMap, actionMap)(TodosRouteComponent);

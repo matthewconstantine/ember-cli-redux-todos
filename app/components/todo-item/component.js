@@ -1,47 +1,53 @@
 import Ember from 'ember';
-import EmberRedux from '../../mixins/ember-redux';
+import connect from 'ember-cli-redux/lib/connect';
 
 const {computed} = Ember;
 
-export default Ember.Component.extend(EmberRedux, {
-  reduxStore: Ember.inject.service(),
-  state: computed.alias('reduxStore.state'),
-
+const Component = Ember.Component.extend({
   tagName: 'li',
   classNameBindings: ['todo.isCompleted:completed', 'isEditing:editing'],
 
-  isEditing: computed('state.todo.editingTodo', 'todo', function() {
-    return this.get('state.todo.editingTodo.id') === this.get('todo.id');
-  }),
+  isEditing: computed('editingTodo', 'todo', function() {
+    return this.get('editingTodo.id') === this.get('todo.id');
+  })
+});
 
-  actions: {
-    editTodo(todo) {
-      this.dispatch({
+const stateMap = {
+  editingTodo: 'todo.editingTodo',
+};
+
+const actionMap = (dispatch) => {
+  return {
+    editTodo: (todo) => {
+      dispatch({
         type: 'EDIT_TODO',
         todo,
       });
     },
 
-    save(todo, title) {
-      this.dispatch({
+    save: (todo, title) => {
+      dispatch({
         type: 'UPDATE_TODO',
         todo,
         title
       });
     },
 
-    removeTodo(todo) {
-      this.dispatch({
+    removeTodo: (todo) => {
+      dispatch({
         type: 'REMOVE_TODO',
         todo
       });
     },
 
-    toggleCompleteTodo(todo) {
-      this.dispatch({
+    toggleCompleteTodo: (todo) => {
+      dispatch({
         type: 'TOGGLE_COMPLETED',
         todo
       });
     }
-  }
-});
+  };
+};
+
+export default connect(stateMap, actionMap)(Component);
+
