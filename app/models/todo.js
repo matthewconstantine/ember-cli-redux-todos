@@ -9,17 +9,17 @@ Todo.reopenClass({
   FIXTURES: [
     {
       id: '1',
-      title: 'install ember-cli-redux',
+      title: 'install ember-cli',
       isCompleted: true
     },
     {
       id: '2',
-      title: 'move stateful code to reducers',
-      isCompleted: false
+      title: 'install additional dependencies',
+      isCompleted: true
     },
     {
       id: '3',
-      title: 'dispatch actions to change state',
+      title: 'develop amazing things',
       isCompleted: false
     }
   ]
